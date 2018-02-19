@@ -14,6 +14,7 @@ public class Response
         EXECUTED(1),
         VERSION_INFO(2),
         STATUS(3),
+        DIANGOSTIC_DATA_INFO(4),
 
         PACKET_TOO_SHORT(101),
         CRC_MISMATCH(102),
@@ -76,6 +77,8 @@ public class Response
             return new VersionResponse(id, payload);
         else if (c == Code.STATUS)
             return new StatusResponse(id, payload);
+        else if (c == Code.DIANGOSTIC_DATA_INFO)
+            return new GetDiagnosticDataResponse(id, payload);
         return new Response(id, c);
     }
 
