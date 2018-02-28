@@ -22,7 +22,8 @@ public abstract class Command
         SLEEP(9),
         ENTER_BOOTLOADER(10),
         SET_DIFFERENTIAL_MATRIX(11),
-        GET_DIAGNOSTIC_DATA(12);
+        GET_DIAGNOSTIC_DATA(12),
+        SCAN_AXIS(13);
 
         private int id;
 

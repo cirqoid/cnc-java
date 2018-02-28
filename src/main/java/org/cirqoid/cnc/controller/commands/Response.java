@@ -15,6 +15,7 @@ public class Response
         VERSION_INFO(2),
         STATUS(3),
         DIANGOSTIC_DATA_INFO(4),
+        MAGNET_SCAN(5),
 
         PACKET_TOO_SHORT(101),
         CRC_MISMATCH(102),
@@ -79,6 +80,8 @@ public class Response
             return new StatusResponse(id, payload);
         else if (c == Code.DIANGOSTIC_DATA_INFO)
             return new GetDiagnosticDataResponse(id, payload);
+        else if (c == Code.MAGNET_SCAN)
+            return new MagnetScanResponse(id, payload);
         return new Response(id, c);
     }
 
