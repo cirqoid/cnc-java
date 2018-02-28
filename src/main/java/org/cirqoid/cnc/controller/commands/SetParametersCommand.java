@@ -68,6 +68,7 @@ public class SetParametersCommand extends Command
     private int motionCorrectionMinLagThreshold;
     private int positioningTolerance;
     private int motionsJointTolerance;
+    private boolean devMode;
 
     // MachineParameters
     private Axis axes[] = new Axis[ApplicationConstants.MAX_AXES_COUNT];
@@ -193,6 +194,16 @@ public class SetParametersCommand extends Command
         motors[i] = motor;
     }
 
+    public boolean isDevMode()
+    {
+        return devMode;
+    }
+
+    public void setDevMode(boolean devMode)
+    {
+        this.devMode = devMode;
+    }
+
     @Override
     public Type getType()
     {
@@ -202,7 +213,7 @@ public class SetParametersCommand extends Command
     @Override
     public byte[] getPayload()
     {
-        ByteBuffer b = ByteBuffer.allocate(10 * 4 + 9 * 4 * ApplicationConstants.MAX_AXES_COUNT + 6 * 4 * ApplicationConstants.MAX_MOTORS_COUNT);
+        ByteBuffer b = ByteBuffer.allocate(10 * 4 + 9 * 4 * ApplicationConstants.MAX_AXES_COUNT + 6 * 4 * ApplicationConstants.MAX_MOTORS_COUNT + 4);
         b.putFloat(acceleration);
         b.putInt(maxArcsFeed);
         b.putInt(motionCorrectionFrequency);
@@ -240,6 +251,7 @@ public class SetParametersCommand extends Command
                 for (int i = 0; i < 6; i++)
                     b.putInt(-1);
         }
+        b.putInt(isDevMode() ? 1 : 0);
         return b.array();
     }
 
