@@ -65,7 +65,7 @@ public class CirqoidInitializer
         z.stepsPerMilli = 200.0f / 2.0f * 8.0f;
         z.lowLimit = -1000000;
         z.highLimit = 1000000;
-        z.seekrate = 1_000_000;
+        z.seekrate = 500_000;
         z.inverted = true;
         z.homingDirection = false;
         z.homingRate = 300_000;
