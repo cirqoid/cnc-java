@@ -4,3 +4,18 @@ jar {
     baseName = 'cirqwizard-cnc'
     version = releaseVersion
 }
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+        url "http://www.sparetimelabs.com/maven2/"
+    }
+    maven {
+        url "http://maven.openimaj.org"
+    }
+}
+
+dependencies {
+    testCompile ('junit:junit:4.11')
+}
