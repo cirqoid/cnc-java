@@ -6,7 +6,7 @@ package org.cirqoid.cnc.controller.settings;
 public class HardwareSettings
 {
     private static final HardwareSettings CIRQOID_SETTINGS = new HardwareSettings(new Axis[]{
-            new Axis(0, 109_000),
+            new Axis(0, 100_000),
             new Axis(0, 235_000),
             new Axis(-25_000, 0),
             new Axis(-1_000_000, 1_000_000)
