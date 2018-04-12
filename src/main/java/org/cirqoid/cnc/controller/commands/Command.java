@@ -23,8 +23,7 @@ public abstract class Command
         ENTER_BOOTLOADER(10),
         SET_DIFFERENTIAL_MATRIX(11),
         GET_DIAGNOSTIC_DATA(12),
-        SCAN_AXIS(13),
-        SET_STEP_PROVIDER(14);
+        SCAN_AXIS(13);
 
         private int id;
 

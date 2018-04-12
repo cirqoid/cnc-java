@@ -69,6 +69,7 @@ public class SetParametersCommand extends Command
     private int positioningTolerance;
     private int motionsJointTolerance;
     private boolean devMode;
+    private boolean useStepperProviders;
 
     // MachineParameters
     private Axis axes[] = new Axis[ApplicationConstants.MAX_AXES_COUNT];
@@ -204,6 +205,16 @@ public class SetParametersCommand extends Command
         this.devMode = devMode;
     }
 
+    public boolean isUseStepperProviders()
+    {
+        return useStepperProviders;
+    }
+
+    public void setUseStepperProviders(boolean useStepperProviders)
+    {
+        this.useStepperProviders = useStepperProviders;
+    }
+
     @Override
     public Type getType()
     {
@@ -213,7 +224,7 @@ public class SetParametersCommand extends Command
     @Override
     public byte[] getPayload()
     {
-        ByteBuffer b = ByteBuffer.allocate(10 * 4 + 9 * 4 * ApplicationConstants.MAX_AXES_COUNT + 6 * 4 * ApplicationConstants.MAX_MOTORS_COUNT + 4);
+        ByteBuffer b = ByteBuffer.allocate(10 * 4 + 9 * 4 * ApplicationConstants.MAX_AXES_COUNT + 6 * 4 * ApplicationConstants.MAX_MOTORS_COUNT + 4 * 2);
         b.putFloat(acceleration);
         b.putInt(maxArcsFeed);
         b.putInt(motionCorrectionFrequency);
@@ -252,6 +263,7 @@ public class SetParametersCommand extends Command
                     b.putInt(-1);
         }
         b.putInt(isDevMode() ? 1 : 0);
+        b.putInt(isUseStepperProviders() ? 1 : 0);
         return b.array();
     }
 

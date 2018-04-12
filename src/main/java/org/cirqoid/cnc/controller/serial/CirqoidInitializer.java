@@ -10,6 +10,7 @@ import org.cirqoid.cnc.controller.commands.VersionResponse;
 import org.cirqoid.cnc.controller.settings.HardwareSettings;
 import org.cirqwizard.logging.LoggerFactory;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -20,12 +21,13 @@ public class CirqoidInitializer
     private static int SUPPORTED_FIRMWARE_MAJOR_VERSION = 0;
     private static int SUPPORTED_FIRMWARE_MIDDLE_VERSION = 3;
 
-    public static SetParametersCommand buildDebugInitCommand(SerialInterface serialInterface)
+    public static SetParametersCommand buildDiagnosticInitCommand(SerialInterface serialInterface)
     {
         SetParametersCommand packet = new SetParametersCommand();
         packet.setId(serialInterface.getPacketId());
         packet.setAcceleration(50);
         packet.setDevMode(true);
+        packet.setUseStepperProviders(true);
         packet.setMaxArcsFeed(300000);
         packet.setMotionCorrectionFrequency(2000);
         packet.setMotionAdjustmentTarget(0.01f);
@@ -142,10 +144,12 @@ public class CirqoidInitializer
         return packet;
     }
 
-    public static SetParametersCommand buildReleaseInitCommand(SerialInterface serialInterface)
+    public static SetParametersCommand buildReleaseInitCommand(SerialInterface serialInterface, boolean devMode)
     {
         SetParametersCommand packet = new SetParametersCommand();
         packet.setId(serialInterface.getPacketId());
+        packet.setDevMode(devMode);
+        packet.setUseStepperProviders(false);
         packet.setAcceleration(100);
         packet.setMaxArcsFeed(450000);
         packet.setMotionCorrectionFrequency(2000);
@@ -263,7 +267,7 @@ public class CirqoidInitializer
         return packet;
     }
 
-    public static void initDevice(SerialInterface serialInterface, Function<SerialInterface, SetParametersCommand> commandBuilder) throws SerialException
+    public static void initDevice(SerialInterface serialInterface, boolean devMode, BiFunction<SerialInterface, Boolean, SetParametersCommand> commandBuilder) throws SerialException
     {
         RequestVersionCommand request = new RequestVersionCommand();
         request.setId(serialInterface.getPacketId());
@@ -293,7 +297,7 @@ public class CirqoidInitializer
 
                     serialInterface.setHardwareVersion(r.getHardwareVersion());
                     serialInterface.setSoftwareVersion(r.getSoftwareVersion());
-                    SetParametersCommand command = commandBuilder.apply(serialInterface);
+                    SetParametersCommand command = commandBuilder.apply(serialInterface, devMode);
                     sendInitPacket(serialInterface, command);
                 }
                 catch (SerialException e)
