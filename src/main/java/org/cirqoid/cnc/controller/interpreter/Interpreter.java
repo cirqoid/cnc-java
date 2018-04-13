@@ -44,7 +44,7 @@ public class Interpreter
             }
         }
         catch (IOException e) {}
-
+        optimizeExitSpeed(result);
         return result;
     }
 
@@ -149,12 +149,136 @@ public class Interpreter
 
     private LinearInterpolationCommand createLinearInterpolationCommand(int[] originalPosition, int[] target)
     {
-        LinearInterpolationCommand lic = new LinearInterpolationCommand(originalPosition, target, context.getFeed());
-        if (originalPosition[2] == target[2] &&
-                Math.hypot(target[0] - originalPosition[0], target[1] - originalPosition[1]) < 200)
-            lic.setMaxExitSpeed(2000);
-        return lic;
+        return new LinearInterpolationCommand(originalPosition, target, context.getFeed());
     }
 
+    private void optimizeExitSpeed(List<Command> commands)
+    {
+        double minAccelerationSpeed = 100;
 
+        for(int i = 0; commands.size() > 1 && i < commands.size(); ++i)
+        {
+            if (!(commands.get(i) instanceof LinearInterpolationCommand))
+            {
+                continue;
+            }
+
+            if (i + 1 < commands.size() && commands.get(i + 1) instanceof LinearInterpolationCommand)
+            {
+                LinearInterpolationCommand command1 = (LinearInterpolationCommand) commands.get(i);
+                int[] command1Start = command1.getStart();
+                int[] command1Target = command1.getTarget();
+
+                double command1Distance = Math.sqrt(Math.pow(command1Target[0] - command1Start[0], 2) + Math.pow(command1Target[1] - command1Start[1], 2) +
+                        Math.pow(command1Target[2] - command1Start[2], 2));
+
+                double v1x = ((command1Target[0] - command1Start[0]) / command1Distance) * command1.getFeed() / 60;
+                double v1y = ((command1Target[1] - command1Start[1]) / command1Distance) * command1.getFeed() / 60;
+                double v1z = ((command1Target[2] - command1Start[2]) / command1Distance) * command1.getFeed() / 60;
+
+                LinearInterpolationCommand command2 = (LinearInterpolationCommand) commands.get(i + 1);
+                int[] command2Start = command2.getStart();
+                int[] command2Target = command2.getTarget();
+
+                double command2Distance = Math.sqrt(Math.pow(command2Target[0] - command2Start[0], 2) + Math.pow(command2Target[1] - command2Start[1], 2) +
+                        Math.pow(command2Target[2] - command2Start[2], 2));
+
+                double v2x = ((command2Target[0] - command2Start[0]) / command2Distance) * command2.getFeed() / 60;
+                double v2y = ((command2Target[1] - command2Start[1]) / command2Distance) * command2.getFeed() / 60;
+                double v2z = ((command2Target[2] - command2Start[2]) / command2Distance) * command2.getFeed() / 60;
+
+                double vtx = getSegmentComponent(v1x, v2x);
+                double vty = getSegmentComponent(v1y, v2y);
+                double vtz = getSegmentComponent(v1z, v2z);
+
+                double v2xs = v2x / (command2.getFeed() / 60);
+                double v2ys = v2y / (command2.getFeed() / 60);
+                double v2zs = v2z / (command2.getFeed() / 60);
+
+                double v1xs = v1x / (command1.getFeed() / 60);
+                double v1ys = v1y / (command1.getFeed() / 60);
+                double v1zs = v1z / (command1.getFeed() / 60);
+
+                double v1xsr = vtx / v1xs;
+                double v1ysr = vty / v1ys;
+                double v1zsr = vtz / v1zs;
+
+                double v2xsr = vtx / v2xs;
+                double v2ysr = vty / v2ys;
+                double v2zsr = vty / v2zs;
+
+                double[] array = {v1xsr, v1ysr, v2xsr, v2ysr, v1zsr, v2zsr};
+
+                int result = Integer.MAX_VALUE;
+                for (double r : array)
+                {
+                    if (!Double.isNaN(r) && !Double.isInfinite(r) && r < result)
+                    {
+                        result = (int)r;
+                    }
+                }
+
+                command1.setMaxExitSpeed(result == Integer.MAX_VALUE ? 0 : result);
+            }
+
+            for (int j = i - 1; j >= 0 && commands.get(j) instanceof LinearInterpolationCommand; --j)
+            {
+                LinearInterpolationCommand command = (LinearInterpolationCommand) commands.get(j + 1);
+                LinearInterpolationCommand previousCommand = (LinearInterpolationCommand) commands.get(j);
+
+                double distance = Math.sqrt(Math.pow(command.getTarget()[0]-command.getStart()[0], 2) + Math.pow(command.getTarget()[1]-command.getStart()[1], 2)) / 1000;
+                int targetSpeed = command.getMaxExitSpeed() / 1000;
+
+                int maxEnterSpeed = (int)(Math.sqrt(targetSpeed * targetSpeed + 2 * minAccelerationSpeed * distance) * 1000);
+
+                if (previousCommand.getMaxExitSpeed() > maxEnterSpeed)
+                {
+                    previousCommand.setMaxExitSpeed(maxEnterSpeed);
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+    private double getSegmentComponent(double v1, double v2)
+    {
+        double accelerationStartSpeed = 1500;
+
+        double vt = 0;
+        if (v1 > 0 && v2 > 0)
+        {
+            vt = Math.min(v1, v2);
+        }
+        else if (v1 < 0 && v2 < 0)
+        {
+            vt = Math.max(v1, v2);
+        }
+        else if (v1 == 0 && v2 != 0)
+        {
+            if (Math.abs(v2) <= accelerationStartSpeed)
+            {
+                vt = v2;
+            }
+            else
+            {
+                vt = accelerationStartSpeed;
+            }
+        }
+        else if (v1 != 0 && v2 == 0)
+        {
+            if (Math.abs(v1) <= accelerationStartSpeed)
+            {
+                vt = v1;
+            }
+            else
+            {
+                vt = accelerationStartSpeed;
+            }
+        }
+
+        return vt;
+    }
 }
