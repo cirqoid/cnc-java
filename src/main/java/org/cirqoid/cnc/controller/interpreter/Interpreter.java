@@ -19,6 +19,7 @@ import java.util.List;
  */
 public class Interpreter
 {
+    private boolean disableRangeCheck = false;
     private Context context = new Context();
 
     public Context getContext()
@@ -90,7 +91,7 @@ public class Interpreter
             }
             if (interpolationCommanded)
             {
-                if (!TravelRangeValidator.validate(context.getCurrentPosition(), HardwareSettings.getCirqoidSettings()))
+                if (!disableRangeCheck && !TravelRangeValidator.validate(context.getCurrentPosition(), HardwareSettings.getCirqoidSettings()))
                     throw new ParsingException("Axis overtravel");
                     executionList.add(createInterpolationCommand(startPosition));
             }
@@ -154,5 +155,9 @@ public class Interpreter
         return lic;
     }
 
+    public void setDisableRangeCheck(boolean disableRangeCheck)
+    {
+        this.disableRangeCheck = disableRangeCheck;
+    }
 
 }

@@ -12,6 +12,13 @@ public class HardwareSettings
             new Axis(-1_000_000, 1_000_000)
     });
 
+    private static final HardwareSettings DEBUG_CIRQOID_SETTINGS = new HardwareSettings(new Axis[]{
+            new Axis(-1_000_000, 1_000_000),
+            new Axis(-1_000_000, 235_000),
+            new Axis(-1_000_000, 1_000_000),
+            new Axis(-1_000_000, 1_000_000)
+    });
+
     private Axis axes[];
 
     public HardwareSettings(Axis[] axes)
@@ -27,5 +34,10 @@ public class HardwareSettings
     public static HardwareSettings getCirqoidSettings()
     {
         return CIRQOID_SETTINGS;
+    }
+
+    public static HardwareSettings getCirqoidDebugSettings()
+    {
+        return DEBUG_CIRQOID_SETTINGS;
     }
 }

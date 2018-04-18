@@ -38,11 +38,13 @@ public class CirqoidInitializer
         packet.setPositioningTolerance(5);
         packet.setMotionsJointTolerance(5);
 
+        HardwareSettings hardwareSettings = HardwareSettings.getCirqoidDebugSettings();
+
         SetParametersCommand.Axis x = new SetParametersCommand.Axis();
         x.enabled = true;
-        x.stepsPerMilli = 200.0f / 2.0f * 8.0f;;
-        x.lowLimit = -1000000;
-        x.highLimit = 1000000;
+        x.stepsPerMilli = 200.0f / 2.0f * 8.0f;
+        x.lowLimit = hardwareSettings.getAxes()[0].getLowLimit();
+        x.highLimit = hardwareSettings.getAxes()[0].getHighLimit();
         x.seekrate = 500_000;
         x.inverted = true;
         x.homingDirection = true;
@@ -53,8 +55,8 @@ public class CirqoidInitializer
         SetParametersCommand.Axis y = new SetParametersCommand.Axis();
         y.enabled = true;
         y.stepsPerMilli = 200.0f / 2.0f * 8.0f;;
-        y.lowLimit = -1000000;
-        y.highLimit = 1000000;
+        y.lowLimit = hardwareSettings.getAxes()[1].getLowLimit();
+        y.highLimit = hardwareSettings.getAxes()[1].getHighLimit();
         y.seekrate = 500_000;
         y.inverted = true;
         y.homingDirection = true;
@@ -65,8 +67,8 @@ public class CirqoidInitializer
         SetParametersCommand.Axis z = new SetParametersCommand.Axis();
         z.enabled = true;
         z.stepsPerMilli = 200.0f / 2.0f * 8.0f;
-        z.lowLimit = -1000000;
-        z.highLimit = 1000000;
+        z.lowLimit = hardwareSettings.getAxes()[2].getLowLimit();
+        z.highLimit = hardwareSettings.getAxes()[2].getHighLimit();
         z.seekrate = 500_000;
         z.inverted = true;
         z.homingDirection = false;
@@ -77,8 +79,8 @@ public class CirqoidInitializer
         SetParametersCommand.Axis a = new SetParametersCommand.Axis();
         a.enabled = true;
         a.stepsPerMilli = 1600.0f / 360.0f * 100.0f;
-        a.lowLimit = -1000000;
-        a.highLimit =  1000000;
+        a.lowLimit = hardwareSettings.getAxes()[3].getLowLimit();
+        a.highLimit =  hardwareSettings.getAxes()[3].getHighLimit();
         a.seekrate = 500_000;
         a.inverted = false;
         a.seekAcceleration = 25.0f;
@@ -161,11 +163,13 @@ public class CirqoidInitializer
         packet.setPositioningTolerance(5);
         packet.setMotionsJointTolerance(5);
 
+        HardwareSettings hardwareSettings = HardwareSettings.getCirqoidDebugSettings();
+
         SetParametersCommand.Axis x = new SetParametersCommand.Axis();
         x.enabled = true;
         x.stepsPerMilli = 800.0f;
-        x.lowLimit = HardwareSettings.getCirqoidSettings().getAxes()[0].getLowLimit();
-        x.highLimit = HardwareSettings.getCirqoidSettings().getAxes()[0].getHighLimit();
+        x.lowLimit = hardwareSettings.getAxes()[0].getLowLimit();
+        x.highLimit = hardwareSettings.getAxes()[0].getHighLimit();
         x.seekrate = 1_500_000;
         x.inverted = true;
         x.homingDirection = true;
@@ -176,20 +180,20 @@ public class CirqoidInitializer
         SetParametersCommand.Axis y = new SetParametersCommand.Axis();
         y.enabled = true;
         y.stepsPerMilli = 800.0f;
-        y.lowLimit = HardwareSettings.getCirqoidSettings().getAxes()[1].getLowLimit();
-        y.highLimit = HardwareSettings.getCirqoidSettings().getAxes()[1].getHighLimit();
+        y.lowLimit = hardwareSettings.getAxes()[1].getLowLimit();
+        y.highLimit = hardwareSettings.getAxes()[1].getHighLimit();
         y.seekrate = 1_000_000;
         y.inverted = true;
         y.homingDirection = true;
         y.homingRate = 300_000;
-        y.seekAcceleration = 30.0f;
+        y.seekAcceleration = 25.0f;
         packet.setAxis(1, y);
 
         SetParametersCommand.Axis z = new SetParametersCommand.Axis();
         z.enabled = true;
         z.stepsPerMilli = 800.0f;
-        z.lowLimit = HardwareSettings.getCirqoidSettings().getAxes()[2].getLowLimit();
-        z.highLimit = HardwareSettings.getCirqoidSettings().getAxes()[2].getHighLimit();
+        z.lowLimit = hardwareSettings.getAxes()[2].getLowLimit();
+        z.highLimit = hardwareSettings.getAxes()[2].getHighLimit();
         z.seekrate = 1_000_000;
         z.inverted = true;
         z.homingDirection = false;
@@ -200,8 +204,8 @@ public class CirqoidInitializer
         SetParametersCommand.Axis a = new SetParametersCommand.Axis();
         a.enabled = true;
         a.stepsPerMilli = 1600.0f / 360.0f * 100.0f;
-        a.lowLimit = HardwareSettings.getCirqoidSettings().getAxes()[3].getLowLimit();
-        a.highLimit =  HardwareSettings.getCirqoidSettings().getAxes()[3].getHighLimit();
+        a.lowLimit = hardwareSettings.getAxes()[3].getLowLimit();
+        a.highLimit =  hardwareSettings.getAxes()[3].getHighLimit();
         a.seekrate = 500_000;
         a.inverted = false;
         a.seekAcceleration = 50.0f;
