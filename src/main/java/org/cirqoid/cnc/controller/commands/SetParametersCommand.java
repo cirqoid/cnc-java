@@ -69,7 +69,6 @@ public class SetParametersCommand extends Command
     private int positioningTolerance;
     private int motionsJointTolerance;
     private boolean devMode;
-    private boolean useStepperProviders;
 
     // MachineParameters
     private Axis axes[] = new Axis[ApplicationConstants.MAX_AXES_COUNT];
@@ -205,16 +204,6 @@ public class SetParametersCommand extends Command
         this.devMode = devMode;
     }
 
-    public boolean isUseStepperProviders()
-    {
-        return useStepperProviders;
-    }
-
-    public void setUseStepperProviders(boolean useStepperProviders)
-    {
-        this.useStepperProviders = useStepperProviders;
-    }
-
     @Override
     public Type getType()
     {
@@ -263,7 +252,6 @@ public class SetParametersCommand extends Command
                     b.putInt(-1);
         }
         b.putInt(isDevMode() ? 1 : 0);
-        b.putInt(isUseStepperProviders() ? 1 : 0);
         return b.array();
     }
 

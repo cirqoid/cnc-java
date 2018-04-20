@@ -27,7 +27,6 @@ public class CirqoidInitializer
         packet.setId(serialInterface.getPacketId());
         packet.setAcceleration(50);
         packet.setDevMode(true);
-        packet.setUseStepperProviders(true);
         packet.setMaxArcsFeed(300000);
         packet.setMotionCorrectionFrequency(2000);
         packet.setMotionAdjustmentTarget(0.01f);
@@ -66,10 +65,10 @@ public class CirqoidInitializer
 
         SetParametersCommand.Axis z = new SetParametersCommand.Axis();
         z.enabled = true;
-        z.stepsPerMilli = 200.0f / 2.0f * 8.0f;
+        z.stepsPerMilli = 200.0f / 2.0f * 8.0f; // buggy value
         z.lowLimit = hardwareSettings.getAxes()[2].getLowLimit();
         z.highLimit = hardwareSettings.getAxes()[2].getHighLimit();
-        z.seekrate = 500_000;
+        z.seekrate = 300_000;
         z.inverted = true;
         z.homingDirection = false;
         z.homingRate = 300_000;
@@ -119,8 +118,6 @@ public class CirqoidInitializer
             m3.homingSensor = SetParametersCommand.HomingSensor.GPIO_HACK;
             m3.invertSensor = false;
             packet.setMotor(3, m3);
-
-            z.seekAcceleration = 50.0f;
         }
         else
         {
@@ -131,8 +128,6 @@ public class CirqoidInitializer
             m3.homingSensor = SetParametersCommand.HomingSensor.AS5311;
             m3.invertSensor = false;
             packet.setMotor(3, m3);
-
-            z.seekAcceleration = 100.0f;
         }
         SetParametersCommand.Motor m4 = new SetParametersCommand.Motor();
         m4.axis = 3;
@@ -146,12 +141,11 @@ public class CirqoidInitializer
         return packet;
     }
 
-    public static SetParametersCommand buildReleaseInitCommand(SerialInterface serialInterface, boolean devMode)
+    public static SetParametersCommand buildReleaseInitCommand(SerialInterface serialInterface)
     {
         SetParametersCommand packet = new SetParametersCommand();
         packet.setId(serialInterface.getPacketId());
-        packet.setDevMode(devMode);
-        packet.setUseStepperProviders(false);
+        packet.setDevMode(false);
         packet.setAcceleration(100);
         packet.setMaxArcsFeed(450000);
         packet.setMotionCorrectionFrequency(2000);
@@ -163,7 +157,7 @@ public class CirqoidInitializer
         packet.setPositioningTolerance(5);
         packet.setMotionsJointTolerance(5);
 
-        HardwareSettings hardwareSettings = HardwareSettings.getCirqoidDebugSettings();
+        HardwareSettings hardwareSettings = HardwareSettings.getCirqoidSettings();
 
         SetParametersCommand.Axis x = new SetParametersCommand.Axis();
         x.enabled = true;
@@ -271,7 +265,7 @@ public class CirqoidInitializer
         return packet;
     }
 
-    public static void initDevice(SerialInterface serialInterface, boolean devMode, BiFunction<SerialInterface, Boolean, SetParametersCommand> commandBuilder) throws SerialException
+    public static void initDevice(SerialInterface serialInterface, Function<SerialInterface, SetParametersCommand> commandBuilder) throws SerialException
     {
         RequestVersionCommand request = new RequestVersionCommand();
         request.setId(serialInterface.getPacketId());
@@ -301,7 +295,7 @@ public class CirqoidInitializer
 
                     serialInterface.setHardwareVersion(r.getHardwareVersion());
                     serialInterface.setSoftwareVersion(r.getSoftwareVersion());
-                    SetParametersCommand command = commandBuilder.apply(serialInterface, devMode);
+                    SetParametersCommand command = commandBuilder.apply(serialInterface);
                     sendInitPacket(serialInterface, command);
                 }
                 catch (SerialException e)

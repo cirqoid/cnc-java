@@ -20,7 +20,7 @@ public abstract class Command
         SPINDLE_CONTROL(7),
         RELAY_CONTROL(8),
         SLEEP(9),
-        ENTER_BOOTLOADER(10),
+        RELOAD_BOOTLOADER(10),
         SET_DIFFERENTIAL_MATRIX(11),
         GET_DIAGNOSTIC_DATA(12),
         SCAN_AXIS(13);
