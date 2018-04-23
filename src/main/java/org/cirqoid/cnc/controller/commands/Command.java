@@ -21,8 +21,7 @@ public abstract class Command
         RELAY_CONTROL(8),
         SLEEP(9),
         ENTER_BOOTLOADER(10),
-        SET_DIFFERENTIAL_MATRIX(11),
-        MEASURE_DIFFERENTIAL_OFFSET(14);
+        SET_DIFFERENTIAL_MATRIX(11);
 
         private int id;
 

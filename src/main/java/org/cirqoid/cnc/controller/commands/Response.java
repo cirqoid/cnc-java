@@ -14,7 +14,6 @@ public class Response
         EXECUTED(1),
         VERSION_INFO(2),
         STATUS(3),
-        DIFFERENTIAL_OFFSET(6),
 
         PACKET_TOO_SHORT(101),
         CRC_MISMATCH(102),
@@ -77,8 +76,6 @@ public class Response
             return new VersionResponse(id, payload);
         else if (c == Code.STATUS)
             return new StatusResponse(id, payload);
-        else if (c == Code.DIFFERENTIAL_OFFSET)
-            return new MeasureDifferentialOffsetResponse(id, payload);
         return new Response(id, c);
     }
 
