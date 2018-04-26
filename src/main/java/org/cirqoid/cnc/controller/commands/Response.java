@@ -68,8 +68,8 @@ public class Response
         int crc32 = b.getInt();
         CRC32 crc = new CRC32();
         crc.update(packet, 0, packet.length - 4);
-//        if (crc32 != (int)crc.getValue())
-//            throw new PacketParsingException("CRC check failed");
+        if (crc32 != (int)crc.getValue())
+            throw new PacketParsingException("CRC check failed");
 
         Code c = Code.forValue(code);
         if (c == Code.VERSION_INFO)
