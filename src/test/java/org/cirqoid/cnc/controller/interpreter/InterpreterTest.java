@@ -227,10 +227,10 @@ public class InterpreterTest
                 "G1 Y04 X0 F1500\n" +
                 "G1 Y05 X0 F1500\n" +
                 "G1 Y05.15 X0 F1500\n" +
-                "G1 Y05.16 X0 F1500\n");
+                "G1 Y05.151 X0 F1500\n");
 
-        assertEquals(25000, ((LinearInterpolationCommand)commands.get(0)).getMaxExitSpeed());
-        assertEquals(5567, ((LinearInterpolationCommand)commands.get(4)).getMaxExitSpeed());
+        assertEquals(910, ((LinearInterpolationCommand)commands.get(0)).getMaxExitSpeed());
+        assertEquals(173, ((LinearInterpolationCommand)commands.get(4)).getMaxExitSpeed());
     }
 
     @Test
@@ -244,8 +244,8 @@ public class InterpreterTest
                 "G1 Y05.15 X05.15 F1500\n" +
                 "G1 Y05.16 X05.16 F1500\n");
 
-        assertEquals(25000, ((LinearInterpolationCommand)commands.get(0)).getMaxExitSpeed());
-        assertEquals(6589, ((LinearInterpolationCommand)commands.get(4)).getMaxExitSpeed());
+        assertEquals(1083, ((LinearInterpolationCommand)commands.get(0)).getMaxExitSpeed());
+        assertEquals(212, ((LinearInterpolationCommand)commands.get(4)).getMaxExitSpeed());
     }
 
     @Test
@@ -262,8 +262,8 @@ public class InterpreterTest
                 "G1 Y05 X4 F1500\n" +
                 "G1 Y05 X5 F1500\n");
 
-        assertEquals(25000, ((LinearInterpolationCommand)commands.get(0)).getMaxExitSpeed());
-        assertEquals(1500, ((LinearInterpolationCommand)commands.get(4)).getMaxExitSpeed());
+        assertEquals(1337, ((LinearInterpolationCommand)commands.get(0)).getMaxExitSpeed());
+        assertEquals(998, ((LinearInterpolationCommand)commands.get(4)).getMaxExitSpeed());
     }
 
     @Test
@@ -277,8 +277,8 @@ public class InterpreterTest
                 "G1 Y00 X06 F1500\n" +
                 "G1 Y00 X07 F1500\n");
 
-        assertEquals(25000, ((LinearInterpolationCommand)commands.get(0)).getMaxExitSpeed());
-        assertEquals(19899, ((LinearInterpolationCommand)commands.get(4)).getMaxExitSpeed());
+        assertEquals(1093, ((LinearInterpolationCommand)commands.get(0)).getMaxExitSpeed());
+        assertEquals(632, ((LinearInterpolationCommand)commands.get(4)).getMaxExitSpeed());
     }
 
     @Test
@@ -292,8 +292,8 @@ public class InterpreterTest
                 "G1 Y03 X06 F1500\n" +
                 "G1 Y03 X07 F1500\n");
 
-        assertEquals(23212, ((LinearInterpolationCommand)commands.get(0)).getMaxExitSpeed());
-        assertEquals(2121, ((LinearInterpolationCommand)commands.get(2)).getMaxExitSpeed());
+        assertEquals(1167, ((LinearInterpolationCommand)commands.get(0)).getMaxExitSpeed());
+        assertEquals(893, ((LinearInterpolationCommand)commands.get(2)).getMaxExitSpeed());
     }
 
     @Test
@@ -308,6 +308,21 @@ public class InterpreterTest
                 "G1 Y01 X00 F1500\n");
 
         assertEquals(0, ((LinearInterpolationCommand)commands.get(0)).getMaxExitSpeed());
-        assertEquals(25000, ((LinearInterpolationCommand)commands.get(1)).getMaxExitSpeed());
+        assertEquals(998, ((LinearInterpolationCommand)commands.get(1)).getMaxExitSpeed());
+    }
+
+    @Test
+    public void testFastSpeedAndyTurnBack() throws ParsingException
+    {
+        Interpreter interpreter = new Interpreter();
+        List<Command> commands = interpreter.interpretBlocks("G0 X1 Y1\n" +
+                "G1 X20 F1000\n" +
+                "G1 X40 Y3\n" +
+                "G1 X60\n" +
+                "G1 X80  Y1\n" +
+                "G0 X0 Y0");
+
+        assertEquals(15074, ((LinearInterpolationCommand)commands.get(1)).getMaxExitSpeed());
+        assertEquals(0, ((LinearInterpolationCommand)commands.get(3)).getMaxExitSpeed());
     }
 }

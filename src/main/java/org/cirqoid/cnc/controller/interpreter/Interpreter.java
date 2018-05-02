@@ -44,6 +44,7 @@ public class Interpreter
             }
         }
         catch (IOException e) {}
+
         optimizeExitSpeed(result);
         return result;
     }
@@ -161,13 +162,12 @@ public class Interpreter
         {
             if (!(commands.get(i) instanceof LinearInterpolationCommand))
             {
-                optimizePreviousCommandsSpeed(i, commands, minAccelerationSpeed);
                 continue;
             }
 
             if (!(commands.get(i + 1) instanceof LinearInterpolationCommand))
             {
-                optimizePreviousCommandsSpeed(i, commands, minAccelerationSpeed);
+
                 continue;
             }
 
@@ -179,9 +179,9 @@ public class Interpreter
             int[] command2Start = command2.getStart();
             int[] command2Target = command2.getTarget();
 
-            int xDelta = command2Start[0] - command1Start[0];
-            int yDelta = command2Start[1] - command1Start[1];
-            int zDelta = command2Start[2] - command1Start[2];
+            int xDelta = command2.getTarget()[0] - command1.getTarget()[0];
+            int yDelta = command2.getTarget()[1] - command1.getTarget()[1];
+            int zDelta = command2.getTarget()[2] - command1.getTarget()[2];
 
             boolean xChangedSign = (xDelta ^ xPrevDelta) < 0;
             boolean yChangedSign = (yDelta ^ yPrevDelta) < 0;
@@ -244,30 +244,29 @@ public class Interpreter
             }
 
             command1.setMaxExitSpeed(maxExitSpeed);
-
-            optimizePreviousCommandsSpeed(i, commands, minAccelerationSpeed);
         }
+
+        optimizePreviousCommandsSpeed(commands, minAccelerationSpeed);
     }
 
-    private void optimizePreviousCommandsSpeed(int start, List<Command> commands, double minAccelerationSpeed)
+    private void optimizePreviousCommandsSpeed(List<Command> commands, double minAccelerationSpeed)
     {
-        for (int j = start - 1; j >= 0 && commands.get(j) instanceof LinearInterpolationCommand && commands.get(j + 1) instanceof  LinearInterpolationCommand; --j)
+        for (int j = commands.size() - 1; j >= 1 && commands.get(j) instanceof LinearInterpolationCommand && commands.get(j - 1) instanceof  LinearInterpolationCommand; --j)
         {
-            LinearInterpolationCommand command = (LinearInterpolationCommand) commands.get(j + 1);
-            LinearInterpolationCommand previousCommand = (LinearInterpolationCommand) commands.get(j);
+            LinearInterpolationCommand command = (LinearInterpolationCommand) commands.get(j);
+            LinearInterpolationCommand previousCommand = (LinearInterpolationCommand) commands.get(j - 1);
 
-            double distance = Math.sqrt(Math.pow(command.getTarget()[0]-command.getStart()[0], 2) + Math.pow(command.getTarget()[1]-command.getStart()[1], 2)) / 1000;
-            int targetSpeed = command.getMaxExitSpeed() / 1000;
+            int distance = (int)Math.sqrt(Math.pow(command.getTarget()[0] - command.getStart()[0], 2) +
+                    Math.pow(command.getTarget()[1] - command.getStart()[1], 2) +
+                    Math.pow(command.getTarget()[2] - command.getStart()[2], 2));
 
-            int maxEnterSpeed = (int)(Math.sqrt(targetSpeed * targetSpeed + 2 * minAccelerationSpeed * distance) * 1000);
+            int targetSpeed = command.getMaxExitSpeed();
+
+            int maxEnterSpeed = (int)(Math.sqrt(targetSpeed * targetSpeed + 2 * minAccelerationSpeed * distance));
 
             if (previousCommand.getMaxExitSpeed() > maxEnterSpeed)
             {
                 previousCommand.setMaxExitSpeed(maxEnterSpeed);
-            }
-            else
-            {
-                break;
             }
         }
     }
