@@ -103,6 +103,11 @@ public class Interpreter
             throw new ParsingException(e.getMessage(), block);
         }
 
+        for(Command command : executionList)
+        {
+            command.setContext((Context) context.clone());
+        }
+
         return executionList;
     }
 

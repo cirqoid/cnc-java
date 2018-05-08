@@ -1,5 +1,7 @@
 package org.cirqoid.cnc.controller.commands;
 
+import org.cirqoid.cnc.controller.interpreter.Context;
+
 import java.nio.ByteBuffer;
 import java.util.zip.CRC32;
 
@@ -8,6 +10,9 @@ import java.util.zip.CRC32;
  */
 public abstract class Command
 {
+    // context after executing a command
+    private Context context;
+
     public enum Type
     {
         ACKNOWLEDGEMENT(0),
@@ -72,4 +77,13 @@ public abstract class Command
         return b.array();
     }
 
+    public Context getContext()
+    {
+        return context;
+    }
+
+    public void setContext(Context context)
+    {
+        this.context = context;
+    }
 }
