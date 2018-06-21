@@ -25,7 +25,7 @@ public class SetParametersCommand extends Command
 
     public enum FeedbackProvider
     {
-        OPEN_LOOP(0), AS5311(1);
+        OPEN_LOOP(0), AS5311(1), DIAGNOSTIC(2);
 
         public int i;
 

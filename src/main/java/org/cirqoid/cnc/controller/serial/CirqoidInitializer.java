@@ -87,7 +87,7 @@ public class CirqoidInitializer
 
         SetParametersCommand.Motor m0 = new SetParametersCommand.Motor();
         m0.axis = 0;
-        m0.feedbackProvider = SetParametersCommand.FeedbackProvider.OPEN_LOOP;
+        m0.feedbackProvider = SetParametersCommand.FeedbackProvider.DIAGNOSTIC;
         m0.invertFeedback = false;
         m0.homingSensor = SetParametersCommand.HomingSensor.AS5311;
         m0.invertSensor = false;
@@ -95,7 +95,7 @@ public class CirqoidInitializer
 
         SetParametersCommand.Motor m1 = new SetParametersCommand.Motor();
         m1.axis = 1;
-        m1.feedbackProvider = SetParametersCommand.FeedbackProvider.OPEN_LOOP;
+        m1.feedbackProvider = SetParametersCommand.FeedbackProvider.DIAGNOSTIC;
         m1.invertFeedback = true;
         m1.homingSensor = SetParametersCommand.HomingSensor.AS5311;
         m1.invertSensor = false;
@@ -103,7 +103,7 @@ public class CirqoidInitializer
 
         SetParametersCommand.Motor m2 = new SetParametersCommand.Motor();
         m2.axis = 1;
-        m2.feedbackProvider = SetParametersCommand.FeedbackProvider.OPEN_LOOP;
+        m2.feedbackProvider = SetParametersCommand.FeedbackProvider.DIAGNOSTIC;
         m2.invertFeedback = true;
         m2.homingSensor = SetParametersCommand.HomingSensor.AS5311;
         m2.invertSensor = true;
@@ -113,7 +113,7 @@ public class CirqoidInitializer
         {
             SetParametersCommand.Motor m3 = new SetParametersCommand.Motor();
             m3.axis = 2;
-            m3.feedbackProvider = SetParametersCommand.FeedbackProvider.OPEN_LOOP;
+            m3.feedbackProvider = SetParametersCommand.FeedbackProvider.DIAGNOSTIC;
             m3.invertFeedback = false;
             m3.homingSensor = SetParametersCommand.HomingSensor.GPIO_HACK;
             m3.invertSensor = false;
@@ -123,7 +123,7 @@ public class CirqoidInitializer
         {
             SetParametersCommand.Motor m3 = new SetParametersCommand.Motor();
             m3.axis = 2;
-            m3.feedbackProvider = SetParametersCommand.FeedbackProvider.OPEN_LOOP;
+            m3.feedbackProvider = SetParametersCommand.FeedbackProvider.DIAGNOSTIC;
             m3.invertFeedback = false;
             m3.homingSensor = SetParametersCommand.HomingSensor.AS5311;
             m3.invertSensor = false;
@@ -131,7 +131,7 @@ public class CirqoidInitializer
         }
         SetParametersCommand.Motor m4 = new SetParametersCommand.Motor();
         m4.axis = 3;
-        m4.feedbackProvider = SetParametersCommand.FeedbackProvider.OPEN_LOOP;
+        m4.feedbackProvider = SetParametersCommand.FeedbackProvider.DIAGNOSTIC;
         m4.invertFeedback = false;
         m4.homingSensor = SetParametersCommand.HomingSensor.NONE;
         m4.invertSensor = false;
