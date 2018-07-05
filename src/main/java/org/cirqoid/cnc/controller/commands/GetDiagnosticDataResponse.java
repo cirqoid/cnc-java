@@ -13,7 +13,7 @@ public class GetDiagnosticDataResponse extends Response
         super(packetId, Code.DIANGOSTIC_DATA_INFO);
         ByteBuffer b = ByteBuffer.wrap(payload);
 
-        positions = new int[ApplicationConstants.MAX_AXES_COUNT];
+        positions = new int[ApplicationConstants.MAX_MOTORS_COUNT];
         for (int i = 0; i < positions.length; i++)
             positions[i] = b.getInt();
 

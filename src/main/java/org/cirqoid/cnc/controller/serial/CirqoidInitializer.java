@@ -53,7 +53,7 @@ public class CirqoidInitializer
 
         SetParametersCommand.Axis y = new SetParametersCommand.Axis();
         y.enabled = true;
-        y.stepsPerMilli = 200.0f / 2.0f * 8.0f;;
+        y.stepsPerMilli = 200.0f / 2.0f * 8.0f;
         y.lowLimit = hardwareSettings.getAxes()[1].getLowLimit();
         y.highLimit = hardwareSettings.getAxes()[1].getHighLimit();
         y.seekrate = 500_000;
@@ -65,7 +65,7 @@ public class CirqoidInitializer
 
         SetParametersCommand.Axis z = new SetParametersCommand.Axis();
         z.enabled = true;
-        z.stepsPerMilli = 1600.0f / 360.0f * 100.0f; // buggy value
+        z.stepsPerMilli = 200.0f / 2.0f * 8.0f;
         z.lowLimit = hardwareSettings.getAxes()[2].getLowLimit();
         z.highLimit = hardwareSettings.getAxes()[2].getHighLimit();
         z.seekrate = 300_000;
